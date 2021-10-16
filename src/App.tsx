@@ -6,6 +6,7 @@ import styled, { ThemeProvider } from "styled-components"
 import Home from "./pages/Home"
 import Header from "./components/Header"
 import chakraTheme from "./utils/chakraTheme"
+import Footer from "./components/Footer"
 
 function App() {
   return (
@@ -22,6 +23,9 @@ function App() {
             </Route>
           </Switch>
         </BodyWrapper>
+        <FooterWrapper>
+          <Footer />
+        </FooterWrapper>
       </SiteWrapper>
     </Router>
   );
@@ -35,6 +39,13 @@ const SiteWrapper = styled.div`
 
 const BodyWrapper = styled(Container)`
   height: ${props => `calc(100vh - ${props.theme.headerHeight})`}
+`;
+
+const FooterWrapper = styled.div`
+  width: 100vw;
+  position: fixed;
+  bottom: 15px;
+  left: 0;
 `;
 
 const Providers: React.FC = ({ children }) => {
