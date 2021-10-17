@@ -16,6 +16,7 @@ const Provider: React.FC = ({ children }) => {
     const [ownedKaijus, setOwnedKaijus] = useState<Kaiju[]>([]);
     const [numOfOwnedKaijus, setNumOfOwnedKaijus] = useState<number | null>(null);
     const [isBreeding, setIsBreeding] = useState<boolean>(false);
+    const [isWhitelisted, setIsWhitelisted] = useState<boolean>(false);
 
     const selectKaiju = useCallback(async (kaiju: Kaiju) => {
         setSelectedKaiju(kaiju);
@@ -29,9 +30,14 @@ const Provider: React.FC = ({ children }) => {
       setIsBreeding(true);
       try {
         const breeder = (new ethers.Contract(KAIJUKINGZ_BREEDER_ADDRESS, KaijuBreederAbi, ethAccount)) as KaijuBreeder;
-        const tx = await breeder.breed(selectedKaiju.id, 1);
+        if (isWhitelisted) {
+            const tx = await breeder.breedFree(selectedKaiju.id, 1);
+            await tx.wait();
+        } else {
+            const tx = await breeder.breed(selectedKaiju.id, 1);
+            await tx.wait();
+        }
         
-        await tx.wait();
         setIsBreeding(false);
       } catch (e) {
         setIsBreeding(false);
@@ -42,6 +48,19 @@ const Provider: React.FC = ({ children }) => {
 
     useEffect(() => {
         async function fetchOwnedKaijus() {
+            if (!ethAccount || !accountAddress) {
+                return;
+            }
+            
+            const breeder = (new ethers.Contract(KAIJUKINGZ_BREEDER_ADDRESS, KaijuBreederAbi, ethAccount)) as KaijuBreeder;
+            const whitelisted = await breeder.whitelist(accountAddress);
+            setIsWhitelisted(whitelisted);
+        }
+        fetchOwnedKaijus()
+    }, [ethAccount, accountAddress])
+
+    useEffect(() => {
+        async function fetchWhitelist() {
             if (!ethAccount || !accountAddress) {
                 return;
             }
@@ -60,7 +79,7 @@ const Provider: React.FC = ({ children }) => {
                 setOwnedKaijus(oldArray => [...oldArray, kaiju]);
             }
         }
-        fetchOwnedKaijus()
+        fetchWhitelist()
     }, [ethAccount, accountAddress])
 
     return (
@@ -70,6 +89,7 @@ const Provider: React.FC = ({ children }) => {
                 selectedKaiju,
                 numOfOwnedKaijus,
                 isBreeding,
+                isWhitelisted,
                 selectKaiju,
                 breed
             }}>

@@ -5,6 +5,7 @@ export interface ContextValues {
     ownedKaijus: Kaiju[],
     numOfOwnedKaijus: number | null,
     isBreeding: boolean,
+    isWhitelisted: boolean,
     selectKaiju: (kaiju: Kaiju) => void,
     breed: () => void,
 }

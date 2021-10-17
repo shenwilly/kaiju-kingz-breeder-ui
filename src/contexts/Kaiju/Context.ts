@@ -6,6 +6,7 @@ const Context = createContext<ContextValues>({
     ownedKaijus: [],
     numOfOwnedKaijus: null,
     isBreeding: false,
+    isWhitelisted: false,
     selectKaiju: (kaiju) => {},
     breed: () => {}
 });
