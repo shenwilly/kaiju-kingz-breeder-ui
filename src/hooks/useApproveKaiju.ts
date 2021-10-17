@@ -14,21 +14,21 @@ export function useApproveKaiju(token: string, operator: string) {
 
   const approve = useCallback(
     async () => {
-    if (!ethAccount || !injectedProvider || !operator || !token) {
-      return;
-    }
+      if (!ethAccount || !injectedProvider || !operator || !token) {
+        return;
+      }
 
-    setApproveIsLoading(true);
-    try {
-      const erc721 = (new ethers.Contract(token, KaijuKingzAbi, ethAccount)) as KaijuKingz;
-      const tx = await erc721.setApprovalForAll(operator, true);
-      
-      await tx.wait();
-      setApproveIsLoading(false);
-    } catch (e) {
-      setApproveIsLoading(false);
-      return false;
-    }
+      setApproveIsLoading(true);
+      try {
+        const erc721 = (new ethers.Contract(token, KaijuKingzAbi, ethAccount)) as KaijuKingz;
+        const tx = await erc721.setApprovalForAll(operator, true);
+        
+        await tx.wait();
+        setApproveIsLoading(false);
+      } catch (e) {
+        setApproveIsLoading(false);
+        return false;
+      }
     },
     [ethAccount, injectedProvider, operator, token],
   )
@@ -39,6 +39,10 @@ export function useApproveKaiju(token: string, operator: string) {
 
   useEffect(() => {
     async function updateBalances() {
+      if (!ethAccount || !accountAddress) {
+        return;
+      }
+      
       const erc721 = (new ethers.Contract(token, KaijuKingzAbi, ethAccount)) as KaijuKingz;
       const approved = await erc721.isApprovedForAll(accountAddress, operator);
       

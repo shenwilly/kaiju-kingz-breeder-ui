@@ -14,22 +14,22 @@ export function useAllowance(token: string, spender: string) {
 
   const approve = useCallback(
     async (amount?: BigNumber) => {
-    if (!ethAccount || !injectedProvider || !spender || !token) {
-      return;
-    }
+      if (!ethAccount || !injectedProvider || !spender || !token) {
+        return;
+      }
 
-    const approveAmount = amount ? amount : constants.MaxUint256;
-  
-    setApproveIsLoading(true);
-    try {
-      const erc20 = (new ethers.Contract(token, RWasteAbi, ethAccount)) as RWaste;
-      const tx = await erc20.approve(spender, approveAmount);
-      await tx.wait();
-      setApproveIsLoading(false);
-    } catch (e) {
-      setApproveIsLoading(false);
-      return false;
-    }
+      const approveAmount = amount ? amount : constants.MaxUint256;
+    
+      setApproveIsLoading(true);
+      try {
+        const erc20 = (new ethers.Contract(token, RWasteAbi, ethAccount)) as RWaste;
+        const tx = await erc20.approve(spender, approveAmount);
+        await tx.wait();
+        setApproveIsLoading(false);
+      } catch (e) {
+        setApproveIsLoading(false);
+        return false;
+      }
     },
     [ethAccount, injectedProvider, spender, token],
   )
@@ -40,6 +40,11 @@ export function useAllowance(token: string, spender: string) {
 
   useEffect(() => {
     async function updateBalances() {
+      if (!ethAccount || !accountAddress) {
+        return;
+      }
+      
+      console.log(accountAddress);
       const erc20 = (new ethers.Contract(token, RWasteAbi, ethAccount)) as RWaste;
       const balances = await erc20.allowance(accountAddress, spender);
       

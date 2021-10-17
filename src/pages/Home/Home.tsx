@@ -1,9 +1,10 @@
 import { Button, Text, Image, VStack } from "@chakra-ui/react"
+import { parseUnits } from "@ethersproject/units";
 import { ethers } from "ethers";
 import { useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
 import KaijuImg from "../../assets/kaijusanta.png";
-import { KAIJUKINGZ_ADDRESS, KAIJUKINGZ_BREEDER_ADDRESS, RWASTE_ADDRESS } from "../../constants";
+import { FUSION_COST, KAIJUKINGZ_ADDRESS, KAIJUKINGZ_BREEDER_ADDRESS, RWASTE_ADDRESS } from "../../constants";
 import { useAllowance } from "../../hooks/useAllowance";
 import { useApproveKaiju } from "../../hooks/useApproveKaiju";
 import useEthereum from "../../hooks/useEthereum";
@@ -24,7 +25,7 @@ const Home = () => {
     
     const handleClick = useCallback(() => {
         const handleClickAsync = async () => {
-            if (!allowance) {
+            if (allowance.lt(parseUnits(FUSION_COST.toString(), "18"))) {
                 await approveRWaste(ethers.constants.MaxUint256);
             } else if (!approval) {
                 await approveKaiju();
@@ -33,16 +34,16 @@ const Home = () => {
             }
         };
         handleClickAsync()
-    }, []);
+    }, [approval, allowance]);
 
     const buttonLabel = useMemo(() => {
         let label = "Confirm Fusion";
 
-        if (!allowance) label = "Approve RWaste";
         if (!approval) label = "Approve Kaiju";
+        if (allowance.lt(parseUnits(FUSION_COST.toString(), "18"))) label = "Approve RWaste";
         
         return label;
-    }, []);
+    }, [approval, allowance]);
     
     return (
         <>
@@ -58,7 +59,7 @@ const Home = () => {
                     <Button minW="200px" colorScheme="green" onClick={() => {}}>Select Kaiju</Button>}
 
                 {injectedProvider &&
-                    <Button minW="200px" isLoading={isLoading} colorScheme="green" onClick={handleClick}>
+                    <Button minW="200px" colorScheme="green" isLoading={isLoading} onClick={handleClick}>
                         {buttonLabel}
                     </Button>}
             </VStack>
