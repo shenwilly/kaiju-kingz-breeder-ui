@@ -1,26 +1,44 @@
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
 import React, { useCallback, useState, useEffect } from "react";
 import useEthereum from "../../hooks/useEthereum";
 import KaijuKingzAbi from "../../constants/abis/KaijuKingz.json";
+import KaijuBreederAbi from "../../constants/abis/KaijuBreeder.json";
 import { KaijuKingz } from '../../types/eth/KaijuKingz';
 import { Kaiju } from "../../types";
 import Context from "./Context";
-import { KAIJUKINGZ_ADDRESS, KAIJUKINGZ_URI } from "../../constants";
+import { KAIJUKINGZ_ADDRESS, KAIJUKINGZ_BREEDER_ADDRESS, KAIJUKINGZ_URI } from "../../constants";
 import { getHttp } from "../../utils/api";
+import { KaijuBreeder } from "../../types/eth";
 
 const Provider: React.FC = ({ children }) => {
     const { accountAddress, ethAccount, injectedProvider } = useEthereum();
     const [selectedKaiju, setSelectedKaiju] = useState<Kaiju | null>(null);
     const [ownedKaijus, setOwnedKaijus] = useState<Kaiju[]>([]);
     const [numOfOwnedKaijus, setNumOfOwnedKaijus] = useState<number | null>(null);
+    const [isBreeding, setIsBreeding] = useState<boolean>(false);
 
     const selectKaiju = useCallback(async (kaiju: Kaiju) => {
         setSelectedKaiju(kaiju);
     }, [setSelectedKaiju]);
 
     const breed = useCallback(async () => {
-        // 
-    }, []);
+      if (!ethAccount || !injectedProvider || !selectedKaiju) {
+        return;
+      }
+
+      setIsBreeding(true);
+      try {
+        const breeder = (new ethers.Contract(KAIJUKINGZ_BREEDER_ADDRESS, KaijuBreederAbi, ethAccount)) as KaijuBreeder;
+        const tx = await breeder.breed(selectedKaiju.id, 1);
+        
+        await tx.wait();
+        setIsBreeding(false);
+      } catch (e) {
+        setIsBreeding(false);
+        return false;
+      }
+
+    }, [ethAccount, injectedProvider]);
 
     useEffect(() => {
         async function fetchOwnedKaijus() {
@@ -51,6 +69,7 @@ const Provider: React.FC = ({ children }) => {
                 ownedKaijus,
                 selectedKaiju,
                 numOfOwnedKaijus,
+                isBreeding,
                 selectKaiju,
                 breed
             }}>
