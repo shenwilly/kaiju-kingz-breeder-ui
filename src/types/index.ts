@@ -1,3 +1,5 @@
+import { BigNumber } from "@ethersproject/bignumber";
+
 export interface ETHEREUM_CHAIN {
   chainId: string; // A 0x-prefixed hexadecimal string
   chainName: string;
@@ -9,4 +11,9 @@ export interface ETHEREUM_CHAIN {
   rpcUrls: string[];
   blockExplorerUrls?: string[];
   iconUrls?: string[]; // Currently ignored.
+}
+
+export type Kaiju = {
+  id: BigNumber
+  uri: string
 }

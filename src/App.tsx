@@ -8,6 +8,7 @@ import Header from "./components/Header"
 import chakraTheme from "./utils/chakraTheme"
 import Footer from "./components/Footer"
 import { EthereumProvider } from "./contexts/Ethereum"
+import { KaijuProvider } from "./contexts/Kaiju"
 
 function App() {
   return (
@@ -58,7 +59,9 @@ const Providers: React.FC = ({ children }) => {
     <ThemeProvider theme={styledTheme}>
       <ChakraProvider theme={chakraTheme}>
         <EthereumProvider>
-          {children}
+          <KaijuProvider>
+            {children}
+          </KaijuProvider>
         </EthereumProvider>
       </ChakraProvider>
     </ThemeProvider>

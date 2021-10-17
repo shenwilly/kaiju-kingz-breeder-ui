@@ -44,7 +44,6 @@ export function useAllowance(token: string, spender: string) {
         return;
       }
       
-      console.log(accountAddress);
       const erc20 = (new ethers.Contract(token, RWasteAbi, ethAccount)) as RWaste;
       const balances = await erc20.allowance(accountAddress, spender);
       

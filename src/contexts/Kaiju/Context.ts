@@ -2,8 +2,11 @@ import { createContext } from "react";
 import { ContextValues } from "./types";
 
 const Context = createContext<ContextValues>({
-    data: "",
-    handler: () => {},
+    selectedKaiju: null,
+    ownedKaijus: [],
+    numOfOwnedKaijus: null,
+    selectKaiju: (kaiju) => {},
+    breed: () => {}
 });
 
 export default Context;

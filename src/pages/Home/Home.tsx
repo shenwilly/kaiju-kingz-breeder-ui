@@ -8,10 +8,11 @@ import { FUSION_COST, KAIJUKINGZ_ADDRESS, KAIJUKINGZ_BREEDER_ADDRESS, RWASTE_ADD
 import { useAllowance } from "../../hooks/useAllowance";
 import { useApproveKaiju } from "../../hooks/useApproveKaiju";
 import useEthereum from "../../hooks/useEthereum";
+import useKaiju from "../../hooks/useKaiju";
 
 const Home = () => {
     const { web3Modal, loadWeb3Modal, injectedProvider } = useEthereum()
-    const [kaijuId, setKaijuId] = useState(null);
+    const { ownedKaijus } = useKaiju();
     const { 
         allowance, allowanceIsLoading, approve:approveRWaste, approveIsLoading:approveRWasteIsLoading
     } = useAllowance(RWASTE_ADDRESS, KAIJUKINGZ_BREEDER_ADDRESS);
@@ -23,17 +24,14 @@ const Home = () => {
         return allowanceIsLoading || approvalIsLoading;
     }, [allowanceIsLoading, approvalIsLoading])
     
-    const handleClick = useCallback(() => {
-        const handleClickAsync = async () => {
-            if (allowance.lt(parseUnits(FUSION_COST.toString(), "18"))) {
-                await approveRWaste(ethers.constants.MaxUint256);
-            } else if (!approval) {
-                await approveKaiju();
-            } else {
-                // await 
-            }
-        };
-        handleClickAsync()
+    const handleClick = useCallback(async () => {
+        if (allowance.lt(parseUnits(FUSION_COST.toString(), "18"))) {
+            await approveRWaste(ethers.constants.MaxUint256);
+        } else if (!approval) {
+            await approveKaiju();
+        } else {
+            // await 
+        }
     }, [approval, allowance]);
 
     const buttonLabel = useMemo(() => {
