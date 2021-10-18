@@ -7,5 +7,5 @@ export interface ContextValues {
     isBreeding: boolean,
     isWhitelisted: boolean,
     selectKaiju: (kaiju: Kaiju) => void,
-    breed: () => void,
+    breed: () => Promise<void>,
 }

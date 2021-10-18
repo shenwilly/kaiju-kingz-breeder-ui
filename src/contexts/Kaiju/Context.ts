@@ -8,7 +8,7 @@ const Context = createContext<ContextValues>({
     isBreeding: false,
     isWhitelisted: false,
     selectKaiju: (kaiju) => {},
-    breed: () => {}
+    breed: () => new Promise<void>(() => {}),
 });
 
 export default Context;

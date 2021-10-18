@@ -41,7 +41,7 @@ const Provider: React.FC = ({ children }) => {
         setIsBreeding(false);
       } catch (e) {
         setIsBreeding(false);
-        return false;
+        return;
       }
 
     }, [ethAccount, injectedProvider]);
