@@ -24,6 +24,7 @@ const Provider: React.FC = ({ children }) => {
     }, [setSelectedKaiju]);
 
     const breed = useCallback(async () => {
+        console.log("masuk!", !ethAccount, !injectedProvider, !selectedKaiju);
       if (!ethAccount || !injectedProvider || !selectedKaiju) {
         return;
       }
@@ -47,7 +48,7 @@ const Provider: React.FC = ({ children }) => {
         return;
       }
 
-    }, [ethAccount, injectedProvider]);
+    }, [ethAccount, injectedProvider, selectedKaiju, isWhitelisted]);
 
     useEffect(() => {
         async function fetchOwnedKaijus() {

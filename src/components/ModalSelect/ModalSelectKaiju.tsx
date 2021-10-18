@@ -2,6 +2,7 @@ import {
   Modal, ModalContent, ModalOverlay, ModalHeader, ModalBody, 
   Text, SimpleGrid, Box, Image
 } from "@chakra-ui/react"
+import { useCallback } from "react";
 import useKaiju from "../../hooks/useKaiju";
 import { Kaiju } from "../../types";
 
@@ -13,10 +14,10 @@ interface ModalProps {
 const ModalSelectKaiju: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const { ownedKaijus, numOfOwnedKaijus, selectKaiju } = useKaiju();
 
-  const handleClick = (kaiju: Kaiju) => {
+  const handleClick = useCallback((kaiju: Kaiju) => {
     selectKaiju(kaiju);
     onClose();
-  }
+  }, [selectKaiju, onClose]);
 
   return (
       <Modal isOpen={isOpen} onClose={onClose} size="xl">

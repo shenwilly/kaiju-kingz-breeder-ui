@@ -1,4 +1,4 @@
-import { Button, Text, Image, VStack, useDisclosure, Box, HStack, Center, Flex } from "@chakra-ui/react"
+import { Button, Text, Image, VStack, useDisclosure, Box, HStack, Flex } from "@chakra-ui/react"
 import { parseUnits } from "@ethersproject/units";
 import { ethers } from "ethers";
 import { useCallback, useMemo } from "react";
@@ -31,9 +31,13 @@ const Home = () => {
         } else if (!approval) {
             await approveKaiju();
         } else {
-            await breed();
+            try {
+                await breed();
+            } catch (error) {
+                console.log(error, "??");
+            }
         }
-    }, [approval, allowance]);
+    }, [approval, allowance, approveRWaste, approveKaiju, breed]);
 
     const buttonLabel = useMemo(() => {
         let label = "Fuse";
@@ -70,7 +74,7 @@ const Home = () => {
                     <Box w="30vh" h="30vh" borderRadius={8} border={"2px"} borderColor="gray.200" cursor="pointer"
                         onClick={() => {injectedProvider ? onOpen() : loadWeb3Modal()}}>
                         {selectedKaiju &&
-                            <Image src={selectedKaiju.uri} fit="contain"/>}
+                            <Image src={selectedKaiju.uri} borderRadius={8} fit="contain"/>}
                         {!selectedKaiju && 
                             <Flex align="center" height="100%">
                                 <Text mx="auto">Select Kaiju</Text>
