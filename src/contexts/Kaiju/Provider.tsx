@@ -6,9 +6,10 @@ import KaijuBreederAbi from "../../constants/abis/KaijuBreeder.json";
 import { KaijuKingz } from '../../types/eth/KaijuKingz';
 import { Kaiju } from "../../types";
 import Context from "./Context";
-import { KAIJUKINGZ_ADDRESS, KAIJUKINGZ_BREEDER_ADDRESS, KAIJUKINGZ_URI } from "../../constants";
+import { FUSION_FEE, KAIJUKINGZ_ADDRESS, KAIJUKINGZ_BREEDER_ADDRESS, KAIJUKINGZ_URI } from "../../constants";
 import { getHttp } from "../../utils/api";
 import { KaijuBreeder } from "../../types/eth";
+import { parseEther } from "@ethersproject/units";
 
 const Provider: React.FC = ({ children }) => {
     const { accountAddress, ethAccount, injectedProvider } = useEthereum();
@@ -34,7 +35,9 @@ const Provider: React.FC = ({ children }) => {
             const tx = await breeder.breedFree(selectedKaiju.id, 1);
             await tx.wait();
         } else {
-            const tx = await breeder.breed(selectedKaiju.id, 1);
+            const tx = await breeder.breed(selectedKaiju.id, 1, {
+                value: parseEther(FUSION_FEE.toString())
+            });
             await tx.wait();
         }
         

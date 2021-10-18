@@ -1,8 +1,9 @@
 import { 
   Modal, ModalContent, ModalOverlay, ModalHeader, ModalBody, 
-  Button, Text, Center, SimpleGrid, Box, Image
+  Text, SimpleGrid, Box, Image
 } from "@chakra-ui/react"
 import useKaiju from "../../hooks/useKaiju";
+import { Kaiju } from "../../types";
 
 interface ModalProps {
   isOpen: boolean;
@@ -11,6 +12,11 @@ interface ModalProps {
 
 const ModalSelectKaiju: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const { ownedKaijus, numOfOwnedKaijus, selectKaiju } = useKaiju();
+
+  const handleClick = (kaiju: Kaiju) => {
+    selectKaiju(kaiju);
+    onClose();
+  }
 
   return (
       <Modal isOpen={isOpen} onClose={onClose} size="xl">
@@ -31,7 +37,9 @@ const ModalSelectKaiju: React.FC<ModalProps> = ({ isOpen, onClose }) => {
             <SimpleGrid columns={3} spacing={4}>
               {ownedKaijus !== null && ownedKaijus.map((kaiju) => {
                 return (
-                  <Box p={1} cursor="pointer" border="2px" borderColor="gray.200">
+                  <Box p={1} cursor="pointer" border="2px" borderColor="gray.200" 
+                    key={kaiju.id.toString()}
+                    onClick={() => handleClick(kaiju)}>
                     <Image src={kaiju.uri} objectFit="contain" borderRadius={5}/>
                   </Box>
                 );
