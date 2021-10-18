@@ -3,6 +3,7 @@ import {
   Text, SimpleGrid, Box, Image
 } from "@chakra-ui/react"
 import { useCallback } from "react";
+import { GENESIS_COUNT } from "../../constants";
 import useKaiju from "../../hooks/useKaiju";
 import { Kaiju } from "../../types";
 
@@ -15,6 +16,11 @@ const ModalSelectKaiju: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const { ownedKaijus, numOfOwnedKaijus, selectKaiju } = useKaiju();
 
   const handleClick = useCallback((kaiju: Kaiju) => {
+    if (kaiju.id.toNumber() >= GENESIS_COUNT) {
+      alert("Can't fuse Baby Kaijuz");
+      return;
+    } 
+
     selectKaiju(kaiju);
     onClose();
   }, [selectKaiju, onClose]);
