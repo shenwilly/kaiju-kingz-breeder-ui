@@ -1,12 +1,14 @@
 import { Button, Text, Image, VStack, useDisclosure, Box, HStack, Flex } from "@chakra-ui/react"
 import { parseUnits } from "@ethersproject/units";
 import { ethers } from "ethers";
+import { formatUnits } from "ethers/lib/utils";
 import { useCallback, useMemo } from "react";
 import KaijuImg from "../../assets/kaijusanta.png";
 import ModalSelectKaiju from "../../components/ModalSelect";
 import { FUSION_COST, KAIJUKINGZ_ADDRESS, KAIJUKINGZ_BREEDER_ADDRESS, RWASTE_ADDRESS } from "../../constants";
 import { useAllowance } from "../../hooks/useAllowance";
 import { useApproveKaiju } from "../../hooks/useApproveKaiju";
+import { useBalance } from "../../hooks/useBalance";
 import useEthereum from "../../hooks/useEthereum";
 import useKaiju from "../../hooks/useKaiju";
 
@@ -24,6 +26,7 @@ const Home = () => {
     const isLoading = useMemo(() => {
         return allowanceIsLoading || approvalIsLoading || approveRWasteIsLoading || approveKaijuIsLoading || isBreeding;
     }, [allowanceIsLoading, approvalIsLoading, approveRWasteIsLoading, approveKaijuIsLoading, isBreeding])
+    const { balance, balanceIsLoading } = useBalance(RWASTE_ADDRESS);
     
     const handleClick = useCallback(async () => {
         if (allowance.lt(parseUnits(FUSION_COST.toString(), "18"))) {
@@ -82,7 +85,8 @@ const Home = () => {
                     </Box>
                 </HStack>
                 <Text fontSize="xl" pt={4}>{fuseLabel}</Text>
-                <Text fontSize="md" pb={5}>Cost: 750 $RWASTE + 0.1 ETH</Text>
+                <Text fontSize="lg" py={2}>Cost: 750 $RWASTE + 0.1 ETH</Text>
+                <Text fontSize="md" pb={5}>Your balance: {balanceIsLoading ? '-' : formatUnits(balance, "18")} $RWaste</Text>
                 
                 {web3Modal && !web3Modal.cachedProvider &&
                     <Button minW="200px" colorScheme="green" onClick={loadWeb3Modal}>Connect</Button>}
