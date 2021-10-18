@@ -33,6 +33,8 @@ const Home = () => {
             await approveRWaste(ethers.constants.MaxUint256);
         } else if (!approval) {
             await approveKaiju();
+        } else if (balance.lt(parseUnits(FUSION_COST.toString(), "18"))) {
+            
         } else {
             try {
                 await breed();
@@ -40,7 +42,7 @@ const Home = () => {
                 console.log(error, "??");
             }
         }
-    }, [approval, allowance, approveRWaste, approveKaiju, breed]);
+    }, [approval, allowance, approveRWaste, approveKaiju, breed, balance]);
 
     const buttonLabel = useMemo(() => {
         let label = "Fuse";
@@ -48,14 +50,16 @@ const Home = () => {
         if (!approval) label = "Approve Kaiju";
         if (allowance.lt(parseUnits(FUSION_COST.toString(), "18"))) label = "Approve RWaste";
         if (!selectedKaiju) label = "Select Kaiju first"
+        if (balance.lt(parseUnits(FUSION_COST.toString(), "18"))) label = "Not enough RWaste"
         
         return label;
-    }, [approval, allowance, selectedKaiju]);
+    }, [approval, allowance, selectedKaiju, balance]);
 
     const buttonDisabled = useMemo(() => {
         if (!selectedKaiju) return true;
+        if (balance.lt(parseUnits(FUSION_COST.toString(), "18"))) return true;
         return false;
-    }, [selectedKaiju])
+    }, [selectedKaiju, balance])
 
     const fuseLabel = useMemo(() => {
         let label;
