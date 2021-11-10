@@ -14,7 +14,7 @@ import useKaiju from "../../hooks/useKaiju";
 
 const Home = () => {
     const { web3Modal, loadWeb3Modal, injectedProvider } = useEthereum()
-    const { selectedKaiju, breed, isBreeding, isWhitelisted } = useKaiju()
+    const { selectedKaiju, breed, isBreeding } = useKaiju()
     const { 
         allowance, allowanceIsLoading, approve:approveRWaste, approveIsLoading:approveRWasteIsLoading
     } = useAllowance(RWASTE_ADDRESS, KAIJUKINGZ_BREEDER_ADDRESS);
@@ -89,7 +89,7 @@ const Home = () => {
                     </Box>
                 </HStack>
                 <Text fontSize="xl" pt={4}>{fuseLabel}</Text>
-                <Text fontSize="lg" py={2}>Cost: 750 $RWASTE{isWhitelisted ? '' : " + 0.1 ETH"}</Text>
+                <Text fontSize="lg" py={2}>Cost: 750 $RWASTE</Text>
                 <Text fontSize="md" pb={5}>Your balance: {balanceIsLoading ? '-' : formatUnits(balance, "18")} $RWaste</Text>
                 
                 {web3Modal && !web3Modal.cachedProvider &&
