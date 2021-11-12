@@ -24,6 +24,9 @@ const Web3AccountModal: React.FC<Web3AccountModalProps> = ({ isOpen, onClose, lo
                   <Center>
                     <Text fontWeight="bold" width="100%" fontSize="sm">{address}</Text>
                   </Center>
+                  <Center>
+                    <Text width="100%" fontSize="xs">v1.1.0</Text>
+                  </Center>
                   <Button
                       isFullWidth={true}
                       onClick={logoutOfWeb3Modal}
